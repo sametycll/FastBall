@@ -6,6 +6,13 @@ TagManager:
   tags:
   - Obstacle
   - Path
+  - Red
+  - Blue
+  - Green
+  - Purble
+  - Yellow
+  - Particle
+  - PathManager
   layers:
   - Default
   - TransparentFX

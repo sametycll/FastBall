@@ -10,9 +10,11 @@ public class PathManager : MonoBehaviour
     [SerializeField] float pathOfDistance;
     [SerializeField] public  float pathSpeed;
     float zPos;
+    public int pth;
 
     private void Start()
     {
+        pth = paths.Length;
         for (int i = 0; i < countOfPaths; i++)
         {
             if (i ==0)
@@ -21,7 +23,7 @@ public class PathManager : MonoBehaviour
             }
             else
             {
-                spawnPath(Random.Range(1,paths.Length));
+                spawnPath(Random.Range(1, pth));
             }
         }
     }
@@ -34,7 +36,7 @@ public class PathManager : MonoBehaviour
 
     }
 
-     void spawnPath(int index)
+     public void spawnPath(int index)
     {
         GameObject newPath = Instantiate(paths[index], new Vector3(transform.position.x,transform.position.y,zPos),Quaternion.identity);
         zPos += pathOfDistance;

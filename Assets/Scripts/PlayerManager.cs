@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -13,7 +14,11 @@ public class PlayerManager : MonoBehaviour
     Rigidbody rb;
     Collider cd;
     PathManager _pathManager;
-
+    Renderer ballRenderer;
+    [SerializeField] ParticleSystem collideParticle;
+    [SerializeField] ParticleSystem airEffect;
+    MenuManager mn;
+    int pthct;
 
 
     void Start()
@@ -22,6 +27,10 @@ public class PlayerManager : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         cd = GetComponent<Collider>();
         _pathManager = FindObjectOfType<PathManager>();
+        ballRenderer = GetComponent<Renderer>();
+        mn = FindObjectOfType<MenuManager>();
+        pthct = GameObject.FindWithTag("PathManager").GetComponent<PathManager>().pth;
+
     }
 
 
@@ -71,7 +80,54 @@ public class PlayerManager : MonoBehaviour
             //Debug.Log("trigger enter");
             gameObject.SetActive(false);
             Time.timeScale = 0;
+            mn.gameOverState = true;
             //gameoverMenu
+        }
+
+        switch (other.tag)
+        {
+            case "Red":
+                other.gameObject.SetActive(false);
+                ballRenderer.material = other.GetComponent<Renderer>().material;
+                var newParticle = Instantiate(collideParticle,transform.position,Quaternion.identity);
+                newParticle.GetComponent<Renderer>().material = other.GetComponent <Renderer>().material;
+                break;
+
+            case "Blue":
+                other.gameObject.SetActive(false);
+                ballRenderer.material = other.GetComponent<Renderer>().material;
+                var newParticle1 = Instantiate(collideParticle, transform.position, Quaternion.identity);
+                newParticle1.GetComponent<Renderer>().material = other.GetComponent<Renderer>().material;
+                break;
+
+            case "Purble":
+                other.gameObject.SetActive(false);
+                ballRenderer.material = other.GetComponent<Renderer>().material;
+                var newParticle2 = Instantiate(collideParticle, transform.position, Quaternion.identity);
+                newParticle2.GetComponent<Renderer>().material = other.GetComponent<Renderer>().material;
+                break;
+
+            case "Yellow":
+                other.gameObject.SetActive(false);
+                ballRenderer.material = other.GetComponent<Renderer>().material;
+                var newParticle3 = Instantiate(collideParticle, transform.position, Quaternion.identity);
+                newParticle3.GetComponent<Renderer>().material = other.GetComponent<Renderer>().material;
+                break;
+
+            case "Green":
+                other.gameObject.SetActive(false);
+                ballRenderer.material = other.GetComponent<Renderer>().material;
+                var newParticle4 = Instantiate(collideParticle, transform.position, Quaternion.identity);
+                newParticle4.GetComponent<Renderer>().material = other.GetComponent<Renderer>().material;
+                break;
+
+        }
+
+        if (other.gameObject.name.Contains("Color"))
+        {
+            PlayerPrefs.SetInt("Score",PlayerPrefs.GetInt("Score")+10);
+            mn._score.text = PlayerPrefs.GetInt("Score").ToString();
+            GameObject.FindWithTag("PathManager").GetComponent<PathManager>().spawnPath(Random.Range(1, pthct));
         }
 
     }
@@ -84,8 +140,12 @@ public class PlayerManager : MonoBehaviour
             rb.isKinematic = cd.isTrigger = false;
 
             rb.velocity = new Vector3(0f,8.5f,0f);
-            _pathManager.pathSpeed *= 2; 
-            
+            _pathManager.pathSpeed *= 2;
+
+            var airEffectMain = airEffect.main;
+            airEffectMain.simulationSpeed = 10f;
+
+
         }
     }
 
@@ -97,7 +157,12 @@ public class PlayerManager : MonoBehaviour
             rb.isKinematic = cd.isTrigger = true;
             _pathManager.pathSpeed /= 2;
 
+
+            var airEffectMain = airEffect.main;
+            airEffectMain.simulationSpeed = 4f;
+
         }
     }
 
 }
+
